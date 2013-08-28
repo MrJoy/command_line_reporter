@@ -2,12 +2,13 @@ module CommandLineReporter
   class Table
     include OptionsValidator
 
-    VALID_OPTIONS = [:border, :width]
+    VALID_OPTIONS = [:border, :width, :separators]
     attr_accessor :rows, *VALID_OPTIONS
 
     def initialize(options = {})
       self.validate_options(options, *VALID_OPTIONS)
 
+      self.separators = options[:separators] || true
       self.border = options[:border] || false
       self.width = options[:width] || false
 
@@ -59,7 +60,7 @@ module CommandLineReporter
       puts separator('first') if self.border
       self.rows.each_with_index do |row, index|
         row.output
-        puts separator('middle') if self.border && (index != self.rows.size - 1)
+        puts separator('middle') if self.border && self.separators && (index != self.rows.size - 1)
       end
       puts separator('last') if self.border
     end
